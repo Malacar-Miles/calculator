@@ -1,0 +1,19 @@
+@import "../../utils/css/variables.scss";
+
+.draggable-module {
+  width: 100%;
+  padding: $module-padding;
+  display: flex;
+  flex-grow: 1;
+  column-gap: $button-gap;
+  row-gap: $button-gap;
+
+  &.keypad-numbers {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    button:nth-of-type(10) {
+      grid-column: span 2;
+    }
+  }
+}

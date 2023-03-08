@@ -1,0 +1,23 @@
+@import "../../../utils/css/variables.scss";
+
+.button-element {
+  width: 100%;
+  height: $button-height;
+
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 1px solid $color-button-border;
+  border-radius: 6px;
+
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 15px;
+  letter-spacing: 0em;
+  text-align: center;
+
+  cursor: pointer;
+}
