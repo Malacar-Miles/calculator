@@ -1,13 +1,29 @@
 import "./module-constructor.scss";
-import { DraggableModuleType } from "../../utils/types/types";
+import {
+  DraggableModuleState,
+  DraggableModuleType,
+} from "../../utils/types/types";
 import Button from "../elements/button/button";
 
+/* This function constructs one of four draggable modules:
+   a display, a keypad with numbers and a decimal comma,
+   a keypad with arithmetic operators or a keypad with
+   just the "equals" button, depending on the value of
+   the moduleType prop. Meanwhile the moduleState prop
+   specifies whether the module is currently being rendered
+   in the left or the right pane, and whether or not it has
+   been added to the right pane. The moduleState prop controls
+   both the CSS and behavior of the module.
+*/
 const ModuleConstructor = ({
   moduleType,
+  moduleState,
+  clickHandler,
 }: {
   moduleType: DraggableModuleType;
+  moduleState?: DraggableModuleState;
+  clickHandler?: () => void;
 }) => {
-  const dynamicClassName = "draggable-module " + moduleType;
   const numericButtons = [
     "7",
     "8",
@@ -23,39 +39,51 @@ const ModuleConstructor = ({
   ];
   const mockAction = () => {};
 
-  switch (moduleType) {
-    case "keypad-operators":
-      return (
-        <div className={dynamicClassName}>
-          <Button name="/" action={mockAction} />
-          <Button name="x" action={mockAction} />
-          <Button name="-" action={mockAction} />
-          <Button name="+" action={mockAction} />
-        </div>
-      );
-    case "keypad-equals":
-      return (
-        <div className={dynamicClassName}>
-          <Button name="=" action={mockAction} />
-        </div>
-      );
-    case "keypad-numbers":
-      return (
-        <div className={dynamicClassName}>
-          {numericButtons.map((name, index) => (
-            <Button name={name} action={mockAction} key={index} />
-          ))}
-        </div>
-      );
-    case "display":
-      return (
-        <div className={dynamicClassName}>
-          <Button name="Display" action={mockAction} />
-        </div>
-      );
-    default:
-      throw new Error("Invalid 'type' prop of 'ModuleConstructor' component.");
-  }
+  const moduleContent = () => {
+    switch (moduleType) {
+      case "keypad-operators":
+        return (
+          <>
+            <Button name="/" action={mockAction} />
+            <Button name="x" action={mockAction} />
+            <Button name="-" action={mockAction} />
+            <Button name="+" action={mockAction} />
+          </>
+        );
+      case "keypad-equals":
+        return (
+          <>
+            <Button name="=" action={mockAction} />
+          </>
+        );
+      case "keypad-numbers":
+        return (
+          <>
+            {numericButtons.map((name, index) => (
+              <Button name={name} action={mockAction} key={index} />
+            ))}
+          </>
+        );
+      case "display":
+        return (
+          <>
+            <Button name="Display" action={mockAction} />
+          </>
+        );
+      default:
+        throw new Error(
+          "Invalid moduleType prop of ModuleConstructor component."
+        );
+    }
+  };
+
+  const dynamicClassName = "draggable-module " + moduleType + " " + moduleState;
+
+  return (
+    <div className={dynamicClassName} onClick={clickHandler}>
+      {moduleContent()}
+    </div>
+  );
 };
 
 export default ModuleConstructor;
