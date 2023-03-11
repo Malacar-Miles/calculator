@@ -1,4 +1,5 @@
 import "./module-constructor.scss";
+import { DragEvent } from "react";
 import {
   DraggableModuleState,
   DraggableModuleType,
@@ -18,11 +19,9 @@ import Button from "../elements/button/button";
 const ModuleConstructor = ({
   moduleType,
   moduleState,
-  clickHandler,
 }: {
   moduleType: DraggableModuleType;
   moduleState?: DraggableModuleState;
-  clickHandler?: () => void;
 }) => {
   const numericButtons = [
     "7",
@@ -79,8 +78,12 @@ const ModuleConstructor = ({
 
   const dynamicClassName = "draggable-module " + moduleType + " " + moduleState;
 
+  const handleDragStart = (event: DragEvent<HTMLDivElement>) => {
+    event.dataTransfer.setData("text/plain", moduleType);
+  };
+
   return (
-    <div className={dynamicClassName} onClick={clickHandler}>
+    <div className={dynamicClassName} draggable onDragStart={handleDragStart}>
       {moduleContent()}
     </div>
   );

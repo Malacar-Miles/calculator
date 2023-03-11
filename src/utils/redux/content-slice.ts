@@ -15,21 +15,23 @@ export const contentSlice = createSlice({
   name: "mainPaneContent",
   initialState,
   reducers: {
-    // Add a specified module name to the back of the array
-    append: (state, action: PayloadAction<DraggableModuleType>) => {
-      const modulesArray = state.value;
-      const moduleToAdd = action.payload;
-      if (modulesArray.indexOf(moduleToAdd) === -1)
-        modulesArray.push(action.payload);
-    },
-
     // Remove a specified module name from the array
     remove: (state, action: PayloadAction<DraggableModuleType>) => {
-      const modulesArray = state.value;
       const moduleToAdd = action.payload;
-      state.value = modulesArray.filter(
+      state.value = state.value.filter(
         (moduleName) => moduleName !== moduleToAdd
       );
+    },
+
+    // Add a specified module name to the back of the array
+    append: (state, action: PayloadAction<DraggableModuleType>) => {
+      const moduleToAdd = action.payload;
+      // Firstly, remove the module name from the array in case it's contained there
+      state.value = state.value.filter(
+        (moduleName) => moduleName !== moduleToAdd
+      );
+      // Then add the module
+      state.value.push(moduleToAdd);
     },
 
     // Add a specified module name before a specified 'targetModule' of the array
@@ -41,14 +43,19 @@ export const contentSlice = createSlice({
       }>
     ) => {
       const { moduleToInsert, targetModule } = action.payload;
-      const modulesArray = state.value;
-      const targetIndex = modulesArray.indexOf(targetModule);
+      const targetIndex = state.value.indexOf(targetModule);
       if (targetIndex === -1)
         throw new Error(
-          "Insertion failed: target module not found in the array."
+          `Insertion failed: target module "${targetModule}" not found in the array.`
         );
-      if (modulesArray.indexOf(moduleToInsert) === -1)
-        modulesArray.splice(targetIndex, 0, moduleToInsert);
+      else {
+        // Firstly, remove the module name from the array in case it's contained there
+        state.value = state.value.filter(
+          (moduleName) => moduleName !== moduleToInsert
+        );
+        // Then insert the module
+        state.value.splice(targetIndex, 0, moduleToInsert);
+      }
     },
   },
 });

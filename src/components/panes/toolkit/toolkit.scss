@@ -3,5 +3,8 @@
 .toolkit-pane {
   width: $pane-width;
   min-height: 216px;
-  border: 1px solid black;
+  border: 2px solid transparent; 
+  /* The transparent border will affect
+  the positioning of draggable modules
+  and better align them with the right panel */
 }
