@@ -20,10 +20,28 @@
   &.drop-indicator-line {
     /* Transform the <div> into a blue line */
     padding: 0;
-    display: block;
+    display: flex;
+    justify-content: space-between;
     border: 1px solid $color-blue;
     position: absolute;
-    z-index: -1;
     width: calc($pane-width - 2px);
+    height: 0;
+
+    .decorator-rhombus {
+      width: 4px;
+      height: 4px;
+      background-color: $color-blue;
+      transform: rotate(45deg);
+      position: relative;
+
+      &.left {
+        left: -4px;
+        top: -2px;
+      }
+      &.right {
+        right: -2px;
+        top: -2px;
+      }
+    }
   }
 }

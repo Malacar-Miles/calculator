@@ -1,6 +1,7 @@
 @import "../../../utils/css/variables.scss";
 
 .toolkit-pane {
+  grid-area: toolkit;
   width: $pane-width;
   min-height: 216px;
   border: 2px solid transparent; 

@@ -54,10 +54,14 @@ const Calculator = () => {
     if (!dragState.isDragActive) return;
 
     /* This code checks the target module name. If it
-    has changed, the code removes and re-inserts the
-    indicator component (blue line) */
+    has changed, and the target itself isn't the blue line,
+    the code removes and re-inserts the indicator
+    component (blue line) */
     const dropTarget = identifyDropTarget(event);
-    if (dragOverTargetName.current !== dropTarget) {
+    if (
+      dragOverTargetName.current !== dropTarget &&
+      dropTarget !== "drop-indicator-line"
+    ) {
       dragOverTargetName.current = dropTarget;
       dispatch(remove("drop-indicator-line"));
       insertModule(event, "drop-indicator-line");
@@ -92,7 +96,6 @@ const Calculator = () => {
     ) {
       dispatch(remove("drop-indicator-line"));
       dragOverTargetName.current = null;
-      console.log("onDragLeave");
     }
   };
 

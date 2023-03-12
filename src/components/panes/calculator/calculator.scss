@@ -1,6 +1,7 @@
 @import "../../../utils/css/variables.scss";
 
 .calculator-pane {
+  grid-area: calculator;
   width: $pane-width;
   border: 2px dashed $color-pane-dashed-border;
   border-radius: 6px;

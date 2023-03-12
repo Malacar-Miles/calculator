@@ -71,7 +71,12 @@ const ModuleConstructor = ({
           </>
         );
       case "drop-indicator-line":
-        return <></>;
+        return (
+          <>
+            <div className="decorator-rhombus left"></div>
+            <div className="decorator-rhombus right"></div>
+          </>
+        );
       default:
         throw new Error(
           "Invalid moduleType prop of ModuleConstructor component."

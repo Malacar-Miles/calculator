@@ -1,16 +1,20 @@
 @import "../../../utils/css/variables.scss";
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   display: flex;
   justify-content: center;
 }
 
-.app {
+.app-pane {
   margin: 0;
   padding: 20px;
   display: grid;
   grid-template-columns: auto auto;
-  column-gap: $pane-gap;
+  grid-template-areas:
+    ". mode-switch"
+    "toolkit calculator";
+  column-gap: $pane-column-gap;
+  row-gap: $pane-row-gap;
   border: 1px solid black;
 }
