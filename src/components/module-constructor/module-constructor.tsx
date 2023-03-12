@@ -1,10 +1,11 @@
 import "./module-constructor.scss";
-import { DragEvent } from "react";
 import {
   DraggableModuleState,
   DraggableModuleType,
 } from "../../utils/types/types";
 import Button from "../elements/button/button";
+import { useDispatch } from "react-redux";
+import { startDrag, endDrag } from "../../utils/redux/drag-state-slice";
 
 /* This function constructs one of four draggable modules:
    a display, a keypad with numbers and a decimal comma,
@@ -23,6 +24,7 @@ const ModuleConstructor = ({
   moduleType: DraggableModuleType;
   moduleState?: DraggableModuleState;
 }) => {
+  const dispatch = useDispatch();
   const numericButtons = [
     "7",
     "8",
@@ -79,12 +81,21 @@ const ModuleConstructor = ({
 
   const dynamicClassName = "draggable-module " + moduleType + " " + moduleState;
 
-  const handleDragStart = (event: DragEvent<HTMLDivElement>) => {
-    event.dataTransfer.setData("text/plain", moduleType);
+  const handleDragStart = () => {
+    dispatch(startDrag(moduleType));
+  };
+
+  const handleDragEnd = () => {
+    dispatch(endDrag());
   };
 
   return (
-    <div className={dynamicClassName} draggable onDragStart={handleDragStart}>
+    <div
+      className={dynamicClassName}
+      draggable
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+    >
       {moduleContent()}
     </div>
   );

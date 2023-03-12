@@ -1,12 +1,14 @@
 import "./calculator.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { DragEvent, useRef } from "react";
-import { selectMainPaneContent } from "../../../utils/redux/content-slice";
-import { append, remove, insert } from "../../../utils/redux/content-slice";
 import {
-  DraggableModuleType,
-  allDraggableModuleTypes,
-} from "../../../utils/types/types";
+  append,
+  remove,
+  insert,
+  selectMainPaneContent,
+} from "../../../utils/redux/content-slice";
+import { selectDragState } from "../../../utils/redux/drag-state-slice";
+import { DraggableModuleType } from "../../../utils/types/types";
 import ModuleConstructor from "../../module-constructor/module-constructor";
 
 const Calculator = () => {
@@ -16,25 +18,7 @@ const Calculator = () => {
     null
   );
 
-  const getDraggedModuleType = (event: DragEvent) => {
-    // Get the identifier of the module that's being dragged
-    return event.dataTransfer.getData("text") as DraggableModuleType;
-  };
-
-  const validateModuleType = (valueToValidate: DraggableModuleType) => {
-    // Validate the dragged module's name to prevent app crash
-    // if some entity from outside the app gets dragged
-    // into the calculator pane
-    if (
-      typeof valueToValidate === "string" &&
-      allDraggableModuleTypes.includes(valueToValidate as DraggableModuleType)
-    )
-      return true;
-    else {
-      console.log("Invalid draggable content.");
-      return false;
-    }
-  };
+  const dragState = useSelector(selectDragState);
 
   const identifyDropTarget = (event: DragEvent) => {
     /* Extract the drop target from the event.
@@ -67,9 +51,7 @@ const Calculator = () => {
 
   const handleDragOver = (event: DragEvent) => {
     event.preventDefault();
-    // console.log(event.dataTransfer.getData("text"));
-    // const draggedModuleType = getDraggedModuleType(event);
-    // if (!validateModuleType(draggedModuleType)) return;
+    if (!dragState.isDragActive) return;
 
     /* This code checks the target module name. If it
     has changed, the code removes and re-inserts the
@@ -84,8 +66,8 @@ const Calculator = () => {
 
   const handleDrop = (event: DragEvent) => {
     event.preventDefault();
-    const droppedModuleType = getDraggedModuleType(event);
-    if (!validateModuleType(droppedModuleType)) return;
+    const droppedModuleType = dragState.moduleBeingDragged;
+    if (!droppedModuleType) return;
 
     // Reset the current dragoverTargetName that's used
     // in handleDragOver function and remove the drop target
@@ -98,11 +80,12 @@ const Calculator = () => {
 
   const handleDragLeave = (event: DragEvent) => {
     event.preventDefault();
-    // This code ensures that the event only fires
-    // when leaving the calculator canvas. Otherwise
-    // it would fire within the canvas unexpectedly.
-    const targetname = identifyDropTarget(event);
-    if (targetname === "canvas") {
+    /* This code ensures that the event only fires
+    when leaving the calculator canvas. Otherwise
+    it would fire within the canvas unexpectedly,
+    when moving between a parent and a child
+    of the canvas */
+    if (event.target === event.currentTarget) {
       dispatch(remove("drop-indicator-line"));
       dragOverTargetName.current = null;
       console.log("onDragLeave");
