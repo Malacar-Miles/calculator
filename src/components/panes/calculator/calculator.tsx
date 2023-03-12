@@ -69,10 +69,10 @@ const Calculator = () => {
     const droppedModuleType = dragState.moduleBeingDragged;
     if (!droppedModuleType) return;
 
-    // Reset the current dragoverTargetName that's used
-    // in handleDragOver function and remove the drop target
-    // indicator (blue line) from Redux, then insert the
-    // module that's being dragged
+    /* Reset the current dragoverTargetName that's used
+    in handleDragOver function and remove the drop target
+    indicator (blue line) from Redux, then insert the
+    module that's being dragged */
     dragOverTargetName.current = null;
     dispatch(remove("drop-indicator-line"));
     insertModule(event, droppedModuleType);
@@ -85,7 +85,11 @@ const Calculator = () => {
     it would fire within the canvas unexpectedly,
     when moving between a parent and a child
     of the canvas */
-    if (event.target === event.currentTarget) {
+    const exitTarget = event.relatedTarget as HTMLElement;
+    if (
+      exitTarget.parentElement?.classList[1] !== "canvas" &&
+      exitTarget.parentElement?.parentElement?.classList[1] !== "canvas"
+    ) {
       dispatch(remove("drop-indicator-line"));
       dragOverTargetName.current = null;
       console.log("onDragLeave");
