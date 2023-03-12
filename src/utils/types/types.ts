@@ -1,8 +1,12 @@
-export type DraggableModuleType =
-  | "display"
-  | "keypad-numbers"
-  | "keypad-operators"
-  | "keypad-equals";
+export const allDraggableModuleTypes = [
+  "display",
+  "keypad-operators",
+  "keypad-numbers",
+  "keypad-equals",
+  "drop-indicator-line"
+] as const;
+
+export type DraggableModuleType = typeof allDraggableModuleTypes[number];
 
 export type DraggableModuleState =
   | "in-toolkit-and-available"

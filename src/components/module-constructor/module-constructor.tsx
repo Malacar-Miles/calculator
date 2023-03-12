@@ -43,10 +43,9 @@ const ModuleConstructor = ({
       case "keypad-operators":
         return (
           <>
-            <Button name="/" action={mockAction} />
-            <Button name="x" action={mockAction} />
-            <Button name="-" action={mockAction} />
-            <Button name="+" action={mockAction} />
+            {["/", "x", "-", "+"].map((operator, index) => (
+              <Button key={index} name={operator} action={mockAction} />
+            ))}
           </>
         );
       case "keypad-equals":
@@ -69,6 +68,8 @@ const ModuleConstructor = ({
             <Button name="Display" action={mockAction} />
           </>
         );
+      case "drop-indicator-line":
+        return <></>;
       default:
         throw new Error(
           "Invalid moduleType prop of ModuleConstructor component."

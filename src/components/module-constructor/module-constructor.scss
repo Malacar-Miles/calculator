@@ -16,4 +16,14 @@
       grid-column: span 2;
     }
   }
+
+  &.drop-indicator-line {
+    /* Transform the <div> into a blue line */
+    padding: 0;
+    display: block;
+    border: 1px solid $color-blue;
+    position: absolute;
+    z-index: -1;
+    width: calc($pane-width - 2px);
+  }
 }

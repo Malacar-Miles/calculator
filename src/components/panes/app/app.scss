@@ -2,11 +2,15 @@
 
 body {
   font-family: 'Inter', sans-serif;
+  display: flex;
+  justify-content: center;
 }
 
 .app {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
+  margin: 0;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: auto auto;
   column-gap: $pane-gap;
+  border: 1px solid black;
 }
