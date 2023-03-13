@@ -32,7 +32,10 @@ const ModuleConstructor = ({
 
   const isDeployed = mainPaneContent.includes(moduleType);
   const shouldBeGreyedOut = isDeployed && moduleState === "in-toolkit";
-  const shouldBeDraggable = !shouldBeGreyedOut;
+  const shouldBeDraggable =
+    !shouldBeGreyedOut &&
+    currentMode === "constructor" &&
+    !(moduleType === "display" && moduleState === "in-calculator");
 
   const moduleContent = () => {
     switch (moduleType) {

@@ -17,21 +17,34 @@ export const contentSlice = createSlice({
   reducers: {
     // Remove a specified module name from the array
     remove: (state, action: PayloadAction<DraggableModuleType>) => {
-      const moduleToAdd = action.payload;
+      const moduleToRemove = action.payload;
       state.value = state.value.filter(
-        (moduleName) => moduleName !== moduleToAdd
+        (moduleName) => moduleName !== moduleToRemove
       );
     },
 
     // Add a specified module name to the back of the array
     append: (state, action: PayloadAction<DraggableModuleType>) => {
-      const moduleToAdd = action.payload;
+      const moduleToAppend = action.payload;
       // Firstly, remove the module name from the array in case it's contained there
       state.value = state.value.filter(
-        (moduleName) => moduleName !== moduleToAdd
+        (moduleName) => moduleName !== moduleToAppend
       );
       // Then add the module
-      state.value.push(moduleToAdd);
+      state.value.push(moduleToAppend);
+    },
+
+    // Add a specified module to the start of the array.
+    // Should only be used with the "display" module or
+    // its target indicator (blue line).
+    prepend: (state, action: PayloadAction<DraggableModuleType>) => {
+      const moduleToPrepend = action.payload;
+      // Firstly, remove the module name from the array in case it's contained there
+      state.value = state.value.filter(
+        (moduleName) => moduleName !== moduleToPrepend
+      );
+      // Then add the module
+      state.value.splice(0, 0, moduleToPrepend);
     },
 
     // Add a specified module name before a specified 'targetModule' of the array
@@ -66,7 +79,7 @@ export const contentSlice = createSlice({
   },
 });
 
-export const { append, remove, insert } = contentSlice.actions;
+export const { append, prepend, remove, insert } = contentSlice.actions;
 export default contentSlice.reducer;
 
 // This function is to be used as an argument for useSelector
