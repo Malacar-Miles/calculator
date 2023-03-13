@@ -19,6 +19,11 @@
     opacity: 50%;
   }
 
+  &.keypad-operators {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+
   &.keypad-numbers {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;

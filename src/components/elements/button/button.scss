@@ -19,9 +19,32 @@
   letter-spacing: 0em;
   text-align: center;
 
+  &.clickable {
+    cursor: pointer;
+    &:hover {
+      border: 2px solid $color-blue;
+    }
+    &:active {
+      color: $color-white;
+      background-color: $color-blue;
+    }
+  }
+
   &.equals-button {
     height: $button-equals-height;
     background-color: $color-blue;
     color: $color-white;
+
+    /* It should always have a blue border,
+    otherwise it appears to grow a little
+    when hovered (and it looks weird) */
+    border: 2px solid $color-blue;
+
+    &.clickable {
+      &:active {
+        background-color: $color-white;
+        color: black;
+      }
+    }
   }
 }

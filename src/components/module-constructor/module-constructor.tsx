@@ -3,11 +3,12 @@ import {
   DraggableModuleState,
   DraggableModuleType,
 } from "../../utils/types/types";
-import Button from "../elements/button/button";
 import { useDispatch, useSelector } from "react-redux";
 import { selectMainPaneContent } from "../../utils/redux/content-slice";
 import { selectMode } from "../../utils/redux/mode-slice";
 import { startDrag, endDrag } from "../../utils/redux/drag-state-slice";
+import Button from "../elements/button/button";
+import Display from "../elements/display/display";
 
 /* This function constructs one of four draggable modules:
    a display, a keypad with numbers and a decimal comma,
@@ -43,7 +44,7 @@ const ModuleConstructor = ({
         return (
           <>
             {["/", "x", "-", "+"].map((operator, index) => (
-              <Button key={index} name={operator} />
+              <Button key={index} buttonName={operator} />
             ))}
           </>
         );
@@ -51,7 +52,7 @@ const ModuleConstructor = ({
       case "keypad-equals":
         return (
           <>
-            <Button name="=" buttonType="equals-button" />
+            <Button buttonName="=" buttonType="equals-button" />
           </>
         );
 
@@ -59,8 +60,8 @@ const ModuleConstructor = ({
         return (
           <>
             {["7", "8", "9", "4", "5", "6", "1", "2", "3", "0", ","].map(
-              (name, index) => (
-                <Button name={name} key={index} />
+              (symbol, index) => (
+                <Button buttonName={symbol} key={index} />
               )
             )}
           </>
@@ -69,7 +70,7 @@ const ModuleConstructor = ({
       case "display":
         return (
           <>
-            <Button name="Display" />
+            <Display />
           </>
         );
 

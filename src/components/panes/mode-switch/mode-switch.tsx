@@ -1,6 +1,7 @@
 import "./mode-switch.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { toggle, selectMode } from "../../../utils/redux/mode-slice";
+import { reset } from "../../../utils/redux/calculator-slice";
 import { ReactComponent as EyeLogo } from "../../../assets/eye.svg";
 import { ReactComponent as AngleBrackets } from "../../../assets/angle-brackets.svg";
 
@@ -19,7 +20,10 @@ const ModeSwitch = () => {
   };
 
   const handleConstructorButtonClick = () => {
-    if (currentMode !== "constructor") dispatch(toggle());
+    if (currentMode !== "constructor") {
+      dispatch(toggle());
+      dispatch(reset()); // Also reset the calculator
+    }
   };
 
   return (
