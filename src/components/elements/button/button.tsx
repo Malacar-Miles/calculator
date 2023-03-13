@@ -1,8 +1,14 @@
 import "./button.scss";
 import { useSelector, useDispatch } from "react-redux";
 import { selectMode } from "../../../utils/redux/mode-slice";
-import { numericInput } from "../../../utils/redux/calculator-slice";
-import { KeypadNumericInput } from "../../../utils/types/types";
+import {
+  numericInput,
+  operatorInput,
+} from "../../../utils/redux/calculator-slice";
+import {
+  KeypadNumericInput,
+  KeypadOperatorInput,
+} from "../../../utils/types/types";
 
 const Button = ({
   buttonName,
@@ -17,8 +23,15 @@ const Button = ({
   const handleClick = () => {
     if (currentMode !== "runtime") return;
 
-    if (buttonName === "," || (buttonName >= "0" && buttonName <= "9"))
-      dispatch(numericInput(buttonName as KeypadNumericInput));
+    // If buttonName is "x", use "*" instead
+    const buttonId = buttonName === "x" ? "*" : buttonName;
+
+    if (buttonId === "," || (buttonId >= "0" && buttonId <= "9"))
+      dispatch(numericInput(buttonId as KeypadNumericInput));
+
+    const allOperators = "+-*/=";
+    if (allOperators.includes(buttonId))
+      dispatch(operatorInput(buttonId as KeypadOperatorInput));
   };
 
   let dynamicClassName = "button-element";
