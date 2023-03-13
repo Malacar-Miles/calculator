@@ -1,12 +1,23 @@
 @import "../../utils/css/variables.scss";
 
 .draggable-module {
-  width: 100%;
+  width: $module-width;
   padding: $module-padding;
   display: flex;
-  flex-grow: 1;
   column-gap: $button-gap;
   row-gap: $button-gap;
+  box-shadow: $module-shadow;
+  border-radius: 4px;
+
+  &.in-calculator {
+    box-shadow: none;
+    padding-bottom: $module-row-gap-in-calculator;
+  }
+
+  &.greyed-out {
+    box-shadow: none;
+    opacity: 50%;
+  }
 
   &.keypad-numbers {
     display: grid;
@@ -26,6 +37,7 @@
     position: absolute;
     width: calc($pane-width - 2px);
     height: 0;
+    pointer-events: none;
 
     .decorator-rhombus {
       width: 4px;

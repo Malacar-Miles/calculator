@@ -1,6 +1,6 @@
 import "./calculator.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { DragEvent, useRef } from "react";
+import { DragEvent, MouseEvent, useRef, useState } from "react";
 import {
   append,
   remove,
@@ -8,17 +8,23 @@ import {
   selectMainPaneContent,
 } from "../../../utils/redux/content-slice";
 import { selectDragState } from "../../../utils/redux/drag-state-slice";
+import { selectMode } from "../../../utils/redux/mode-slice";
 import { DraggableModuleType } from "../../../utils/types/types";
 import ModuleConstructor from "../../module-constructor/module-constructor";
+import DropHint from "../../elements/drop-hint/drop-hint";
 
 const Calculator = () => {
   const dispatch = useDispatch();
+  const [isHighlighted, setIsHighlighted] = useState(false);
   const mainPaneContent = useSelector(selectMainPaneContent);
+  const currentMode = useSelector(selectMode);
+  const dragState = useSelector(selectDragState);
   const dragOverTargetName = useRef<DraggableModuleType | "canvas" | null>(
     null
   );
+  const isEmpty = mainPaneContent.length === 0;
 
-  const dragState = useSelector(selectDragState);
+  if (!isEmpty && isHighlighted) setIsHighlighted(false);
 
   const identifyDropTarget = (event: DragEvent) => {
     /* Extract the drop target from the event.
@@ -53,18 +59,21 @@ const Calculator = () => {
     event.preventDefault();
     if (!dragState.isDragActive) return;
 
-    /* This code checks the target module name. If it
-    has changed, and the target itself isn't the blue line,
-    the code removes and re-inserts the indicator
-    component (blue line) */
-    const dropTarget = identifyDropTarget(event);
-    if (
-      dragOverTargetName.current !== dropTarget &&
-      dropTarget !== "drop-indicator-line"
-    ) {
-      dragOverTargetName.current = dropTarget;
-      dispatch(remove("drop-indicator-line"));
-      insertModule(event, "drop-indicator-line");
+    if (isEmpty) setIsHighlighted(true);
+    else {
+      /* This code checks the target module name. If it
+      has changed, and the target itself isn't the blue line,
+      the code removes and re-inserts the indicator
+      component (blue line) */
+      const dropTarget = identifyDropTarget(event);
+      if (
+        dragOverTargetName.current !== dropTarget &&
+        dropTarget !== "drop-indicator-line"
+      ) {
+        dragOverTargetName.current = dropTarget;
+        dispatch(remove("drop-indicator-line"));
+        insertModule(event, "drop-indicator-line");
+      }
     }
   };
 
@@ -78,7 +87,7 @@ const Calculator = () => {
     indicator (blue line) from Redux, then insert the
     module that's being dragged */
     dragOverTargetName.current = null;
-    dispatch(remove("drop-indicator-line"));
+    if (!isEmpty) dispatch(remove("drop-indicator-line"));
     insertModule(event, droppedModuleType);
   };
 
@@ -91,28 +100,44 @@ const Calculator = () => {
     of the canvas */
     const exitTarget = event.relatedTarget as HTMLElement;
     if (
-      exitTarget.parentElement?.classList[1] !== "canvas" &&
-      exitTarget.parentElement?.parentElement?.classList[1] !== "canvas"
+      exitTarget?.parentElement?.classList[1] !== "canvas" &&
+      exitTarget?.parentElement?.parentElement?.classList[1] !== "canvas"
     ) {
-      dispatch(remove("drop-indicator-line"));
-      dragOverTargetName.current = null;
+      if (isEmpty) setIsHighlighted(false);
+      else {
+        dispatch(remove("drop-indicator-line"));
+        dragOverTargetName.current = null;
+      }
     }
   };
 
+  const handleDoubleClick = (event: MouseEvent<HTMLElement>) => {
+    // TODO: implement module removal
+  };
+
+  let dynamicClassName = "calculator-pane canvas";
+  if (isEmpty) dynamicClassName += " empty";
+  if (isHighlighted) dynamicClassName += " highlighted";
+
   return (
     <main
-      className="calculator-pane canvas"
+      className={dynamicClassName}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
       onDragLeave={handleDragLeave}
+      onDoubleClick={handleDoubleClick}
     >
-      {mainPaneContent.map((module, index) => (
-        <ModuleConstructor
-          key={index}
-          moduleType={module}
-          moduleState={"deployed"}
-        />
-      ))}
+      {isEmpty ? (
+        <DropHint />
+      ) : (
+        mainPaneContent.map((module, index) => (
+          <ModuleConstructor
+            key={index}
+            moduleType={module}
+            moduleState="in-calculator"
+          />
+        ))
+      )}
     </main>
   );
 };

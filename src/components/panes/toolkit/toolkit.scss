@@ -3,9 +3,12 @@
 .toolkit-pane {
   grid-area: toolkit;
   width: $pane-width;
-  min-height: 216px;
   border: 2px solid transparent; 
   /* The transparent border will affect
   the positioning of draggable modules
   and better align them with the right panel */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  row-gap: $module-row-gap-in-toolkit;
 }

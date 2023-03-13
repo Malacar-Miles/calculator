@@ -3,6 +3,14 @@
 .calculator-pane {
   grid-area: calculator;
   width: $pane-width;
-  border: 2px dashed $color-pane-dashed-border;
-  border-radius: 6px;
+  min-height: $pane-height;
+
+  &.empty {
+    border: 2px dashed $color-pane-dashed-border;
+    border-radius: 6px;
+  }
+
+  &.highlighted {
+    background-color: $color-blue-background;
+  }
 }

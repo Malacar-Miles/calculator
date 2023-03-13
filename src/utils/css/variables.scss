@@ -1,13 +1,24 @@
 $pane-width: 244px;
+$pane-height: 448px;
 $pane-column-gap: 58px;
 $pane-row-gap: 30px;
+
 $color-pane-dashed-border: #C4C4C4;
 $color-grey-background: #f3f4f6;
-
+$color-blue-background: #F0F9FF;
 $color-blue: #5D5FEF;
-
 $color-button-border: #E2E3E5;
+$color-mode-button: #4D5562;
+$color-grey-text: #6B7280;
+$color-white: #FFFFFF;
+
+
 $button-gap: 8px;
 $button-height: 48px;
+$button-equals-height: 64px;
 
 $module-padding: 4px;
+$module-width: 240px;
+$module-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.1);
+$module-row-gap-in-toolkit: 12px;
+$module-row-gap-in-calculator: 8px;

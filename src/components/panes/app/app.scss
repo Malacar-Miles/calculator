@@ -2,13 +2,13 @@
 
 body {
   font-family: "Inter", sans-serif;
+  color: black;
   display: flex;
   justify-content: center;
 }
 
 .app-pane {
-  margin: 0;
-  padding: 20px;
+  padding: 38px 80px 36px 74px;
   display: grid;
   grid-template-columns: auto auto;
   grid-template-areas:

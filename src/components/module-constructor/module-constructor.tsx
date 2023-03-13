@@ -4,7 +4,9 @@ import {
   DraggableModuleType,
 } from "../../utils/types/types";
 import Button from "../elements/button/button";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectMainPaneContent } from "../../utils/redux/content-slice";
+import { selectMode } from "../../utils/redux/mode-slice";
 import { startDrag, endDrag } from "../../utils/redux/drag-state-slice";
 
 /* This function constructs one of four draggable modules:
@@ -22,23 +24,15 @@ const ModuleConstructor = ({
   moduleState,
 }: {
   moduleType: DraggableModuleType;
-  moduleState?: DraggableModuleState;
+  moduleState: DraggableModuleState;
 }) => {
   const dispatch = useDispatch();
-  const numericButtons = [
-    "7",
-    "8",
-    "9",
-    "4",
-    "5",
-    "6",
-    "1",
-    "2",
-    "3",
-    "0",
-    ",",
-  ];
-  const mockAction = () => {};
+  const mainPaneContent = useSelector(selectMainPaneContent);
+  const currentMode = useSelector(selectMode);
+
+  const isDeployed = mainPaneContent.includes(moduleType);
+  const shouldBeGreyedOut = isDeployed && moduleState === "in-toolkit";
+  const shouldBeDraggable = !shouldBeGreyedOut;
 
   const moduleContent = () => {
     switch (moduleType) {
@@ -46,30 +40,36 @@ const ModuleConstructor = ({
         return (
           <>
             {["/", "x", "-", "+"].map((operator, index) => (
-              <Button key={index} name={operator} action={mockAction} />
+              <Button key={index} name={operator} />
             ))}
           </>
         );
+
       case "keypad-equals":
         return (
           <>
-            <Button name="=" action={mockAction} />
+            <Button name="=" buttonType="equals-button" />
           </>
         );
+
       case "keypad-numbers":
         return (
           <>
-            {numericButtons.map((name, index) => (
-              <Button name={name} action={mockAction} key={index} />
-            ))}
+            {["7", "8", "9", "4", "5", "6", "1", "2", "3", "0", ","].map(
+              (name, index) => (
+                <Button name={name} key={index} />
+              )
+            )}
           </>
         );
+
       case "display":
         return (
           <>
-            <Button name="Display" action={mockAction} />
+            <Button name="Display" />
           </>
         );
+
       case "drop-indicator-line":
         return (
           <>
@@ -77,6 +77,7 @@ const ModuleConstructor = ({
             <div className="decorator-rhombus right"></div>
           </>
         );
+
       default:
         throw new Error(
           "Invalid moduleType prop of ModuleConstructor component."
@@ -84,7 +85,8 @@ const ModuleConstructor = ({
     }
   };
 
-  const dynamicClassName = "draggable-module " + moduleType + " " + moduleState;
+  let dynamicClassName = "draggable-module " + moduleType + " " + moduleState;
+  if (shouldBeGreyedOut) dynamicClassName += " greyed-out";
 
   const handleDragStart = () => {
     dispatch(startDrag(moduleType));
@@ -97,7 +99,7 @@ const ModuleConstructor = ({
   return (
     <div
       className={dynamicClassName}
-      draggable
+      draggable={shouldBeDraggable}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
