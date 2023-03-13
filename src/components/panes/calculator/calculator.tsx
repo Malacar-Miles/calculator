@@ -1,6 +1,6 @@
 import "./calculator.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { DragEvent, MouseEvent, useRef, useState } from "react";
+import { DragEvent, useRef, useState } from "react";
 import {
   append,
   remove,
@@ -57,7 +57,7 @@ const Calculator = () => {
 
   const handleDragOver = (event: DragEvent) => {
     event.preventDefault();
-    if (!dragState.isDragActive) return;
+    if (!dragState.moduleBeingDragged) return;
 
     if (isEmpty) setIsHighlighted(true);
     else {
@@ -72,7 +72,18 @@ const Calculator = () => {
       ) {
         dragOverTargetName.current = dropTarget;
         dispatch(remove("drop-indicator-line"));
-        insertModule(event, "drop-indicator-line");
+        if (
+          /* Do not insert the drop indicator line if 
+          the dragged module is the same as the target module
+          of if the target module is next in the list
+          (because in those cases the order of modules
+          will not change when the module is dropped). */
+          dragState.moduleBeingDragged !== dropTarget &&
+          mainPaneContent.indexOf(dropTarget as DraggableModuleType) -
+            mainPaneContent.indexOf(dragState.moduleBeingDragged) !==
+            1
+        )
+          insertModule(event, "drop-indicator-line");
       }
     }
   };
@@ -111,8 +122,9 @@ const Calculator = () => {
     }
   };
 
-  const handleDoubleClick = (event: MouseEvent<HTMLElement>) => {
-    // TODO: implement module removal
+  const handleDoubleClick = (event: unknown) => {
+    const moduleToRemove = identifyDropTarget(event as DragEvent);
+    if (moduleToRemove !== "canvas") dispatch(remove(moduleToRemove));
   };
 
   let dynamicClassName = "calculator-pane canvas";

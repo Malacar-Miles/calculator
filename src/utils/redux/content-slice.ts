@@ -43,16 +43,22 @@ export const contentSlice = createSlice({
       }>
     ) => {
       const { moduleToInsert, targetModule } = action.payload;
-      const targetIndex = state.value.indexOf(targetModule);
+      let targetIndex = state.value.indexOf(targetModule);
       if (targetIndex === -1)
         throw new Error(
           `Insertion failed: target module "${targetModule}" not found in the array.`
         );
       else {
-        // Firstly, remove the module name from the array in case it's contained there
-        state.value = state.value.filter(
-          (moduleName) => moduleName !== moduleToInsert
-        );
+        // Firstly, check if the module is already contained in the array
+        // and memorize its index, then remove the module
+        const existingIndex = state.value.indexOf(moduleToInsert);
+        if (existingIndex !== -1) {
+          state.value.splice(existingIndex, 1);
+          // If the removed element comes before targetIndex,
+          // decrement targetIndex by 1 to preserve the correct
+          // insertion spot.
+          if (existingIndex < targetIndex) targetIndex--;
+        }
         // Then insert the module
         state.value.splice(targetIndex, 0, moduleToInsert);
       }
