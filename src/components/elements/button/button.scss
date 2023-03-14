@@ -24,12 +24,8 @@
   &.clickable {
     pointer-events: initial;
     cursor: pointer;
-    &:hover {
-      border: 2px solid $color-blue;
-    }
     &:active {
-      color: $color-white;
-      background-color: $color-blue;
+      border: 2px solid $color-blue;
     }
   }
 
@@ -40,7 +36,7 @@
 
     /* It should always have a blue border,
     otherwise it appears to grow a little
-    when hovered (and it looks weird) */
+    when cliked (and it looks weird) */
     border: 2px solid $color-blue;
 
     &.clickable {
