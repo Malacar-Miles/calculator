@@ -19,7 +19,10 @@
   letter-spacing: 0em;
   text-align: center;
 
+  pointer-events: none;
+
   &.clickable {
+    pointer-events: initial;
     cursor: pointer;
     &:hover {
       border: 2px solid $color-blue;
