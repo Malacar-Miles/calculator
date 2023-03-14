@@ -156,7 +156,7 @@ export const calculatorSlice = createSlice({
           state.storedOperator = null;
         }
       } else {
-        // We have a store value, a stored operator and a current value.
+        // We have a stored value, a stored operator and a current value.
         // So we do the math.
         state.storedValue = calculate(
           state.storedValue,

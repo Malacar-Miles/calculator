@@ -1,6 +1,6 @@
 import "./calculator.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { DragEvent, useRef } from "react";
+import { DragEvent, useRef, useState } from "react";
 import {
   append,
   prepend,
@@ -16,10 +16,10 @@ import DropHint from "../../elements/drop-hint/drop-hint";
 
 const Calculator = () => {
   const dispatch = useDispatch();
+  const [isHighlighted, setIsHighlighted] = useState(false);
   const mainPaneContent = useSelector(selectMainPaneContent);
   const currentMode = useSelector(selectMode);
   const dragState = useSelector(selectDragState);
-  const isHighlighted = dragState.isDragActive;
   const dragOverTargetName = useRef<DraggableModuleType | "canvas" | null>(
     null
   );
@@ -28,11 +28,17 @@ const Calculator = () => {
   const identifyDropTarget = (event: DragEvent) => {
     /* Extract the drop target from the event.
        Drop target can be either the calculator pane, a
-       draggable module or a button contained in that module.
-       If it's a button, we want to get its parent module */
+       draggable module or a child of a draggable module.
+       If it's a child, we want to get its parent module */
     const eventTarget = event.target as HTMLElement;
+    const eventTargetClass = eventTarget.classList[0];
     const dropTarget = (
-      eventTarget.nodeName === "BUTTON" ? eventTarget.parentNode : eventTarget
+      !(
+        eventTargetClass === "calculator-pane" ||
+        eventTargetClass === "draggable-module"
+      )
+        ? eventTarget.parentNode
+        : eventTarget
     ) as HTMLElement;
     // Return the second className of dropTarget. It should be
     // either a module name or "canvas" if it's the calculator pane
@@ -59,7 +65,8 @@ const Calculator = () => {
     event.preventDefault();
     if (currentMode === "runtime" || !dragState.moduleBeingDragged) return;
 
-    if (!isEmpty) {
+    if (isEmpty) setIsHighlighted(true)
+    else {
       /* This code checks the target module name. If it
       has changed, and the target itself isn't the blue line,
       the code removes and re-inserts the indicator
@@ -71,16 +78,28 @@ const Calculator = () => {
       ) {
         dragOverTargetName.current = dropTarget;
         dispatch(remove("drop-indicator-line"));
-        if (
-          /* Do not insert the drop indicator line if
-          the dragged module is the same as the target module,
-          or if the target module is next in the list
-          (because in those cases the order of modules
-          will not change when the module is dropped). */
-          dragState.moduleBeingDragged !== dropTarget &&
+
+        /* Do not insert the drop indicator line if
+        the any of these conditions is true:
+        - dragged module is the same as the target module;
+        - target module is the next one in the list after
+          the dragged module;
+        - target is the canvas and the dragged module
+          is the last one in the list.
+        In all these cases the order of modules won't change
+        when the drop happens, so the indicator should not appear. */
+        const condition1 = dragState.moduleBeingDragged === dropTarget;
+
+        const condition2 =
           mainPaneContent.indexOf(dropTarget as DraggableModuleType) -
-            mainPaneContent.indexOf(dragState.moduleBeingDragged) !== 1
-        )
+            mainPaneContent.indexOf(dragState.moduleBeingDragged) === 1;
+            
+        const condition3 =
+          dropTarget === "canvas" &&
+          mainPaneContent.lastIndexOf(dragState.moduleBeingDragged) ===
+            mainPaneContent.length - 1;
+
+        if (!(condition1 || condition2 || condition3))
           if (dragState.moduleBeingDragged === "display")
             // If it's a display, it should be on top
             dispatch(prepend("drop-indicator-line"));
@@ -99,7 +118,8 @@ const Calculator = () => {
     indicator (blue line) from Redux, then insert the
     module that's being dragged */
     dragOverTargetName.current = null;
-    if (!isEmpty) dispatch(remove("drop-indicator-line"));
+    if (isEmpty) setIsHighlighted(false)
+    else dispatch(remove("drop-indicator-line"));
 
     // If it's a display, it should be on top
     if (droppedModuleType === "display") dispatch(prepend(droppedModuleType));
@@ -119,7 +139,8 @@ const Calculator = () => {
       exitTarget?.parentElement?.classList[1] !== "canvas" &&
       exitTarget?.parentElement?.parentElement?.classList[1] !== "canvas"
     ) {
-      if (!isEmpty) {
+      if (isEmpty) setIsHighlighted(false)
+      else {
         dispatch(remove("drop-indicator-line"));
         dragOverTargetName.current = null;
       }
@@ -128,7 +149,6 @@ const Calculator = () => {
 
   const handleDoubleClick = (event: unknown) => {
     if (currentMode === "runtime") return;
-
     const moduleToRemove = identifyDropTarget(event as DragEvent);
     if (moduleToRemove !== "canvas") dispatch(remove(moduleToRemove));
   };
