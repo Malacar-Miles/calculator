@@ -28,7 +28,7 @@ export const calculatorSlice = createSlice({
     reset: (state) => initialState,
 
     numericInput: (state, action: PayloadAction<KeypadNumericInput>) => {
-      const maxInputLength = 8;
+      const maxInputLength = 12;
       const inputKey = action.payload;
       const inputIsADecimalSeparator = inputKey === ",";
 
@@ -89,13 +89,25 @@ export const calculatorSlice = createSlice({
         else state.displayValue = toDisplayValue(state.storedValue);
       };
 
+      // This helper function converts a numeric value to a string
+      // and formats this string so it fits the display.
       const toDisplayValue = (numericValue: number): string => {
-        const maxInputLength = 8;
+        const maxDisplayLength = 18;
         const stringValue = numericValue.toString();
+
+        const truncateNumericValue = (longNumber: number) => {
+          // We truncate differently depending on whether the
+          // number is very big or just has a long decimal part
+          const bigNumberThreshold = 100000000000;
+          if (longNumber < bigNumberThreshold)
+            return longNumber.toPrecision(maxDisplayLength - 2);
+          else return longNumber.toPrecision(maxDisplayLength - 6);
+        };
+
         const result =
-          stringValue.length <= maxInputLength
+          stringValue.length <= maxDisplayLength
             ? stringValue
-            : numericValue.toPrecision(maxInputLength);
+            : truncateNumericValue(numericValue);
         return result.replace(".", ",");
       };
 

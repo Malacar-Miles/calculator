@@ -4,7 +4,15 @@ import { selectCalculatorDisplay } from "../../../utils/redux/calculator-slice";
 
 const Display = () => {
   const displayValue = useSelector(selectCalculatorDisplay);
-  return <span className="display-element">{displayValue}</span>;
+  const valueLength = displayValue.length;
+  const smallerSizeThreshold = 10;
+  const smallestSizeThreshold = 13;
+
+  let dynamicClassName = "display-element";
+  if (valueLength >= smallestSizeThreshold) dynamicClassName += " smallest";
+  else if (valueLength >= smallerSizeThreshold) dynamicClassName += " smaller";
+
+  return <span className={dynamicClassName}>{displayValue}</span>;
 };
 
 export default Display;
