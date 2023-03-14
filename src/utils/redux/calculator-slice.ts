@@ -28,7 +28,7 @@ export const calculatorSlice = createSlice({
     reset: (state) => initialState,
 
     numericInput: (state, action: PayloadAction<KeypadNumericInput>) => {
-      const maxInputLength = 10;
+      const maxInputLength = 8;
       const inputKey = action.payload;
       const inputIsADecimalSeparator = inputKey === ",";
 
@@ -89,16 +89,26 @@ export const calculatorSlice = createSlice({
         else state.displayValue = toDisplayValue(state.storedValue);
       };
 
-      const toDisplayValue = (numericValue: number) => {
-        const maxInputLength = 10;
-        return numericValue.toString();
+      const toDisplayValue = (numericValue: number): string => {
+        const maxInputLength = 8;
+        const stringValue = numericValue.toString();
+        const result =
+          stringValue.length <= maxInputLength
+            ? stringValue
+            : numericValue.toPrecision(maxInputLength);
+        return result.replace(".", ",");
+      };
+
+      const toNumericValue = (stringValue: string) : number => {
+        const localizedString = stringValue.replace(",", ".");
+        return Number(localizedString);
       };
 
       // If state.currentNumericInput isn't null, convert it to a number
       // and store it as currentValue. Otherwise assign null to currentValue
       const currentValue =
         state.currentNumericInput !== null
-          ? Number(state.currentNumericInput)
+          ? toNumericValue(state.currentNumericInput)
           : null;
 
       // No matter what happens next, we reset state.currentNumericInput
