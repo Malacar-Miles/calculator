@@ -92,26 +92,31 @@ export const calculatorSlice = createSlice({
       // This helper function converts a numeric value to a string
       // and formats this string so it fits the display.
       const toDisplayValue = (numericValue: number): string => {
-        const maxDisplayLength = 18;
+        const maxDisplayLength = 17;
         const stringValue = numericValue.toString();
+        const numDigits = stringValue.length;
 
         const truncateNumericValue = (longNumber: number) => {
           // We truncate differently depending on whether the
           // number is very big or just has a long decimal part
-          const bigNumberThreshold = 100000000000;
-          if (longNumber < bigNumberThreshold)
-            return longNumber.toPrecision(maxDisplayLength - 2);
-          else return longNumber.toPrecision(maxDisplayLength - 6);
+          if (longNumber > -1 && longNumber < 1)
+            return longNumber.toFixed(maxDisplayLength - 1);
+          else {
+            const truncatedString = longNumber.toPrecision(maxDisplayLength - 1);
+            const isExponential = truncatedString.includes("e");
+            if (!isExponential) return truncatedString;
+              else return longNumber.toPrecision(3);
+          }
         };
 
         const result =
-          stringValue.length <= maxDisplayLength
+          numDigits <= maxDisplayLength
             ? stringValue
             : truncateNumericValue(numericValue);
         return result.replace(".", ",");
       };
 
-      const toNumericValue = (stringValue: string) : number => {
+      const toNumericValue = (stringValue: string): number => {
         const localizedString = stringValue.replace(",", ".");
         return Number(localizedString);
       };

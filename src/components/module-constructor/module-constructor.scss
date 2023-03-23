@@ -11,7 +11,7 @@
 
   &.in-calculator {
     box-shadow: none;
-    padding-bottom: $module-row-gap-in-calculator;
+    padding-bottom: calc($module-row-gap-in-calculator + $module-padding);
   }
 
   &.greyed-out {
