@@ -11,7 +11,7 @@ import {
 } from "../../../utils/redux/content-slice";
 import { selectDragState } from "../../../utils/redux/drag-state-slice";
 import { selectMode } from "../../../utils/redux/mode-slice";
-import { DraggableModuleType } from "../../../utils/types/types";
+import { DraggableModuleType } from "../../../utils/types/types-and-constants";
 import ModuleConstructor from "../../module-constructor/module-constructor";
 import DropHint from "../../elements/drop-hint/drop-hint";
 

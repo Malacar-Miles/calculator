@@ -9,7 +9,9 @@ import {
 import {
   KeypadNumericInput,
   KeypadOperatorInput,
-} from "../../../utils/types/types";
+  allOperators,
+  allKeypadNumericInputs,
+} from "../../../utils/types/types-and-constants";
 
 const Button = ({
   buttonName,
@@ -24,15 +26,11 @@ const Button = ({
   const handleClick = () => {
     if (currentMode !== "runtime") return;
 
-    // If buttonName is "x", use "*" instead
-    const buttonId = buttonName === "x" ? "*" : buttonName;
+    if (allKeypadNumericInputs.includes(buttonName as KeypadNumericInput))
+      dispatch(numericInput(buttonName as KeypadNumericInput));
 
-    if (buttonId === "," || (buttonId >= "0" && buttonId <= "9"))
-      dispatch(numericInput(buttonId as KeypadNumericInput));
-
-    const allOperators = "+-*/=";
-    if (allOperators.includes(buttonId))
-      dispatch(operatorInput(buttonId as KeypadOperatorInput));
+    if (allOperators.includes(buttonName as KeypadOperatorInput))
+      dispatch(operatorInput(buttonName as KeypadOperatorInput));
   };
 
   const dynamicClassName = classNames("button-element", {

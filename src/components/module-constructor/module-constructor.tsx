@@ -2,7 +2,10 @@ import "./module-constructor.scss";
 import {
   DraggableModuleState,
   DraggableModuleType,
-} from "../../utils/types/types";
+  allKeypadNumericInputs,
+  mathOperators,
+  operatorEquals,
+} from "../../utils/types/types-and-constants";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { selectMainPaneContent } from "../../utils/redux/content-slice";
@@ -44,7 +47,7 @@ const ModuleConstructor = ({
       case "keypad-operators":
         return (
           <>
-            {["/", "x", "-", "+"].map((operator, index) => (
+            {mathOperators.map((operator, index) => (
               <Button key={index} buttonName={operator} />
             ))}
           </>
@@ -53,18 +56,16 @@ const ModuleConstructor = ({
       case "keypad-equals":
         return (
           <>
-            <Button buttonName="=" buttonType="equals-button" />
+            <Button buttonName={operatorEquals} buttonType="equals-button" />
           </>
         );
 
       case "keypad-numbers":
         return (
           <>
-            {["7", "8", "9", "4", "5", "6", "1", "2", "3", "0", ","].map(
-              (symbol, index) => (
-                <Button buttonName={symbol} key={index} />
-              )
-            )}
+            {allKeypadNumericInputs.map((symbol, index) => (
+              <Button buttonName={symbol} key={index} />
+            ))}
           </>
         );
 

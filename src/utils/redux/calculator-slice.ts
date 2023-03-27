@@ -4,12 +4,12 @@ import { RootState } from "./store";
 import {
   KeypadNumericInput,
   KeypadOperatorInput,
-  Operator,
-} from "../types/types";
+  MathOperator,
+} from "../types/types-and-constants";
 
 export type CalculatorState = {
   currentNumericInput: string | null;
-  storedOperator: Operator | null;
+  storedOperator: MathOperator | null;
   storedValue: number | null;
   displayValue: string;
 };
@@ -68,9 +68,9 @@ export const calculatorSlice = createSlice({
       const currentOperatorInput = action.payload;
       const currentOperatorIsEquals = currentOperatorInput === "=";
 
-      const calculate = (a: number, operator: Operator, b: number) => {
+      const calculate = (a: number, operator: MathOperator, b: number) => {
         switch (operator) {
-          case "*":
+          case "x":
             return a * b;
           case "+":
             return a + b;

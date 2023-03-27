@@ -1,6 +1,6 @@
 import "./toolkit.scss";
 import ModuleConstructor from "../../module-constructor/module-constructor";
-import { allDraggableModuleTypes } from "../../../utils/types/types";
+import { allDraggableModuleTypes } from "../../../utils/types/types-and-constants";
 import { useSelector } from "react-redux";
 import { selectMode } from "../../../utils/redux/mode-slice";
 
