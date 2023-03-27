@@ -1,5 +1,6 @@
 import "./mode-switch.scss";
 import { useDispatch, useSelector } from "react-redux";
+import classNames from "classnames";
 import { toggle, selectMode } from "../../../utils/redux/mode-slice";
 import { reset } from "../../../utils/redux/calculator-slice";
 import { ReactComponent as EyeLogo } from "../../../assets/eye.svg";
@@ -9,11 +10,13 @@ const ModeSwitch = () => {
   const dispatch = useDispatch();
   const currentMode = useSelector(selectMode);
 
-  const runtimeButtonClassName =
-    currentMode === "runtime" ? "mode-button active" : "mode-button";
+  const runtimeButtonClassName = classNames("mode-button", {
+    "active": currentMode === "runtime",
+  });
 
-  const constructorButtonClassName =
-    currentMode === "constructor" ? "mode-button active" : "mode-button";
+  const constructorButtonClassName = classNames("mode-button", {
+    "active": currentMode === "constructor",
+  });
 
   const handleRuntimeButtonClick = () => {
     if (currentMode !== "runtime") dispatch(toggle());

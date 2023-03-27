@@ -1,6 +1,7 @@
 import "./calculator.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { useRef, useState } from "react";
+import classNames from "classnames";
 import {
   append,
   prepend,
@@ -156,9 +157,10 @@ const Calculator = () => {
     if (moduleToRemove !== "canvas") dispatch(remove(moduleToRemove));
   };
 
-  let dynamicClassName = "calculator-pane canvas";
-  if (isEmpty) dynamicClassName += " empty";
-  if (isHighlighted) dynamicClassName += " highlighted";
+  const dynamicClassName = classNames("calculator-pane", "canvas", {
+    "empty": isEmpty,
+    "highlighted": isHighlighted,
+  });
 
   return (
     <main

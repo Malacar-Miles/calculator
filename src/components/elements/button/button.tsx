@@ -1,5 +1,6 @@
 import "./button.scss";
 import { useSelector, useDispatch } from "react-redux";
+import classNames from "classnames";
 import { selectMode } from "../../../utils/redux/mode-slice";
 import {
   numericInput,
@@ -34,9 +35,10 @@ const Button = ({
       dispatch(operatorInput(buttonId as KeypadOperatorInput));
   };
 
-  let dynamicClassName = "button-element";
-  if (buttonType === "equals-button") dynamicClassName += " equals-button";
-  if (currentMode === "runtime") dynamicClassName += " clickable";
+  const dynamicClassName = classNames("button-element", {
+    "equals-button": buttonType === "equals-button",
+    clickable: currentMode === "runtime",
+  });
 
   return (
     <button className={dynamicClassName} onClick={handleClick}>

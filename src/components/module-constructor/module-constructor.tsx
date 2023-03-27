@@ -4,6 +4,7 @@ import {
   DraggableModuleType,
 } from "../../utils/types/types";
 import { useDispatch, useSelector } from "react-redux";
+import classNames from "classnames";
 import { selectMainPaneContent } from "../../utils/redux/content-slice";
 import { selectMode } from "../../utils/redux/mode-slice";
 import { startDrag, endDrag } from "../../utils/redux/drag-state-slice";
@@ -89,8 +90,14 @@ const ModuleConstructor = ({
     }
   };
 
-  let dynamicClassName = "draggable-module " + moduleType + " " + moduleState;
-  if (shouldBeGreyedOut) dynamicClassName += " greyed-out";
+  const dynamicClassName = classNames(
+    "draggable-module",
+    moduleType,
+    moduleState,
+    {
+      "greyed-out": shouldBeGreyedOut,
+    }
+  );
 
   const handleDragStart = () => {
     dispatch(startDrag(moduleType));

@@ -1,5 +1,6 @@
 import "./display.scss";
 import { useSelector } from "react-redux";
+import classNames from "classnames";
 import { selectCalculatorDisplay } from "../../../utils/redux/calculator-slice";
 
 const Display = () => {
@@ -8,9 +9,12 @@ const Display = () => {
   const smallerSizeThreshold = 10;
   const smallestSizeThreshold = 13;
 
-  let dynamicClassName = "display-element";
-  if (valueLength >= smallestSizeThreshold) dynamicClassName += " smallest";
-  else if (valueLength >= smallerSizeThreshold) dynamicClassName += " smaller";
+  const dynamicClassName = classNames("display-element", {
+    smallest: valueLength >= smallestSizeThreshold,
+    smaller:
+      valueLength >= smallerSizeThreshold &&
+      valueLength < smallestSizeThreshold,
+  });
 
   return <span className={dynamicClassName}>{displayValue}</span>;
 };
