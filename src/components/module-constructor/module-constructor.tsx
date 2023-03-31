@@ -6,23 +6,21 @@ import {
   mathOperators,
   operatorEquals,
 } from "../../utils/types/types-and-constants";
-import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
-import { selectMainPaneContent } from "../../utils/redux/content-slice";
-import { selectMode } from "../../utils/redux/mode-slice";
-import { startDrag, endDrag } from "../../utils/redux/drag-state-slice";
+import { useContentSlice, useModeSlice, useDragStateSlice } from "../../utils/redux/interface-hooks";
 import Button from "../elements/button/button";
 import Display from "../elements/display/display";
 
-/* This function constructs one of four draggable modules:
+/* This function constructs one of five draggable modules:
    a display, a keypad with numbers and a decimal comma,
-   a keypad with arithmetic operators or a keypad with
-   just the "equals" button, depending on the value of
-   the moduleType prop. Meanwhile the moduleState prop
-   specifies whether the module is currently being rendered
-   in the left or the right pane, and whether or not it has
-   been added to the right pane. The moduleState prop controls
-   both the CSS and behavior of the module.
+   a keypad with arithmetic operators, a keypad with
+   just the "equals" button, or a drop indicator line
+   (depending on the value of moduleType).
+   Meanwhile moduleState specifies whether the module
+   is currently being rendered in the left or the right pane
+   and whether or not it has been added to the right pane.
+   The prop "moduleState" controls both the CSS and behavior
+   of the module.
 */
 const ModuleConstructor = ({
   moduleType,
@@ -31,15 +29,15 @@ const ModuleConstructor = ({
   moduleType: DraggableModuleType;
   moduleState: DraggableModuleState;
 }) => {
-  const dispatch = useDispatch();
-  const mainPaneContent = useSelector(selectMainPaneContent);
-  const currentMode = useSelector(selectMode);
+  const { mainPaneContent } = useContentSlice();
+  const { appMode } = useModeSlice();
+  const { startModuleDrag, endModuleDrag } = useDragStateSlice();
 
   const isDeployed = mainPaneContent.includes(moduleType);
   const shouldBeGreyedOut = isDeployed && moduleState === "in-toolkit";
   const shouldBeDraggable =
     !shouldBeGreyedOut &&
-    currentMode === "constructor" &&
+    appMode === "constructor" &&
     !(moduleType === "display" && moduleState === "in-calculator");
 
   const moduleContent = () => {
@@ -101,11 +99,11 @@ const ModuleConstructor = ({
   );
 
   const handleDragStart = () => {
-    dispatch(startDrag(moduleType));
+    startModuleDrag(moduleType);
   };
 
   const handleDragEnd = () => {
-    dispatch(endDrag());
+    endModuleDrag();
   };
 
   return (

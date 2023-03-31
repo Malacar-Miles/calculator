@@ -1,17 +1,10 @@
 import "./button.scss";
-import { useSelector, useDispatch } from "react-redux";
 import classNames from "classnames";
-import { selectMode } from "../../../utils/redux/mode-slice";
+import { KeypadInput } from "../../../utils/types/types-and-constants";
 import {
-  numericInput,
-  operatorInput,
-} from "../../../utils/redux/calculator-slice";
-import {
-  KeypadNumericInput,
-  KeypadOperatorInput,
-  allOperators,
-  allKeypadNumericInputs,
-} from "../../../utils/types/types-and-constants";
+  useCalculatorSlice,
+  useModeSlice,
+} from "../../../utils/redux/interface-hooks";
 
 const Button = ({
   buttonName,
@@ -20,22 +13,16 @@ const Button = ({
   buttonName: string;
   buttonType?: string;
 }) => {
-  const dispatch = useDispatch();
-  const currentMode = useSelector(selectMode);
+  const { sendCalculatorInput } = useCalculatorSlice();
+  const { appMode } = useModeSlice();
 
   const handleClick = () => {
-    if (currentMode !== "runtime") return;
-
-    if (allKeypadNumericInputs.includes(buttonName as KeypadNumericInput))
-      dispatch(numericInput(buttonName as KeypadNumericInput));
-
-    if (allOperators.includes(buttonName as KeypadOperatorInput))
-      dispatch(operatorInput(buttonName as KeypadOperatorInput));
+    if (appMode === "runtime") sendCalculatorInput(buttonName as KeypadInput);
   };
 
   const dynamicClassName = classNames("button-element", {
     "equals-button": buttonType === "equals-button",
-    clickable: currentMode === "runtime",
+    clickable: appMode === "runtime",
   });
 
   return (

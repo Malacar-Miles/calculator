@@ -1,31 +1,29 @@
 import "./mode-switch.scss";
-import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
-import { toggle, selectMode } from "../../../utils/redux/mode-slice";
-import { reset } from "../../../utils/redux/calculator-slice";
+import { useModeSlice, useCalculatorSlice } from "../../../utils/redux/interface-hooks";
 import { ReactComponent as EyeLogo } from "../../../assets/eye.svg";
 import { ReactComponent as AngleBrackets } from "../../../assets/angle-brackets.svg";
 
 const ModeSwitch = () => {
-  const dispatch = useDispatch();
-  const currentMode = useSelector(selectMode);
+  const { appMode, toggleAppMode } = useModeSlice();
+  const { resetCalculatorState } = useCalculatorSlice();
 
   const runtimeButtonClassName = classNames("mode-button", {
-    "active": currentMode === "runtime",
+    "active": appMode === "runtime",
   });
 
   const constructorButtonClassName = classNames("mode-button", {
-    "active": currentMode === "constructor",
+    "active": appMode === "constructor",
   });
 
   const handleRuntimeButtonClick = () => {
-    if (currentMode !== "runtime") dispatch(toggle());
+    if (appMode !== "runtime") toggleAppMode();
   };
 
   const handleConstructorButtonClick = () => {
-    if (currentMode !== "constructor") {
-      dispatch(toggle());
-      dispatch(reset()); // Also reset the calculator
+    if (appMode !== "constructor") {
+      toggleAppMode();
+      resetCalculatorState();
     }
   };
 

@@ -38,6 +38,8 @@ export const operatorEquals = "=" as const;
 
 export type OperatorEquals = typeof operatorEquals;
 
-export const allOperators = [...mathOperators, operatorEquals];
+export const allOperators = [...mathOperators, operatorEquals] as const;
 
 export type KeypadOperatorInput = typeof allOperators[number];
+
+export type KeypadInput = KeypadNumericInput | KeypadOperatorInput;

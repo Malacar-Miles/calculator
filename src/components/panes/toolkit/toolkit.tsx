@@ -1,18 +1,17 @@
 import "./toolkit.scss";
 import ModuleConstructor from "../../module-constructor/module-constructor";
 import { allDraggableModuleTypes } from "../../../utils/types/types-and-constants";
-import { useSelector } from "react-redux";
-import { selectMode } from "../../../utils/redux/mode-slice";
+import { useModeSlice } from "../../../utils/redux/interface-hooks";
 
 const Toolkit = () => {
-  const currentMode = useSelector(selectMode);
+  const { appMode } = useModeSlice();
 
   const allModules = [...allDraggableModuleTypes];
-  allModules.pop();
+  allModules.pop(); // Removes "drop-indicator-line" module
 
   return (
     <aside className="toolkit-pane">
-      {currentMode === "constructor" &&
+      {appMode === "constructor" &&
         allModules.map((moduleType, index) => (
           <ModuleConstructor
             key={index}

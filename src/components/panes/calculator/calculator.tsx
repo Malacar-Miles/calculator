@@ -1,29 +1,23 @@
 import "./calculator.scss";
-import { useDispatch, useSelector } from "react-redux";
 import { useRef, useState } from "react";
 import classNames from "classnames";
 import {
-  append,
-  prepend,
-  remove,
-  insert,
-  selectMainPaneContent,
-} from "../../../utils/redux/content-slice";
-import { selectDragState } from "../../../utils/redux/drag-state-slice";
-import { selectMode } from "../../../utils/redux/mode-slice";
+  useDragStateSlice,
+  useModeSlice,
+  useContentSlice,
+} from "../../../utils/redux/interface-hooks";
 import { DraggableModuleType } from "../../../utils/types/types-and-constants";
 import ModuleConstructor from "../../module-constructor/module-constructor";
 import DropHint from "../../elements/drop-hint/drop-hint";
 
 const Calculator = () => {
-  const dispatch = useDispatch();
   const [isHighlighted, setIsHighlighted] = useState(false);
-  const mainPaneContent = useSelector(selectMainPaneContent);
+  const { mainPaneContent, appendModule, prependModule, insertModule, removeModule } = useContentSlice();
   const filteredMainPaneContent = mainPaneContent.filter(
     (moduleName) => moduleName !== "drop-indicator-line"
   );
-  const currentMode = useSelector(selectMode);
-  const dragState = useSelector(selectDragState);
+  const { appMode } = useModeSlice();
+  const { dragState } = useDragStateSlice();
   const dragOverTargetName = useRef<DraggableModuleType | "canvas" | null>(
     null
   );
@@ -38,25 +32,19 @@ const Calculator = () => {
     return eventTargetClass as DraggableModuleType | "canvas";
   };
 
-  const insertModule = (
+  const insertModuleByEvent = (
     event: React.MouseEvent<HTMLElement>,
     moduleToInsert: DraggableModuleType
   ) => {
     const dropTarget = identifyTarget(event);
     if (dropTarget === "display") return;
-    if (dropTarget === "canvas") dispatch(append(moduleToInsert));
-    else
-      dispatch(
-        insert({
-          moduleToInsert: moduleToInsert,
-          targetModule: dropTarget,
-        })
-      );
+    if (dropTarget === "canvas") appendModule(moduleToInsert);
+    else insertModule(moduleToInsert, dropTarget);
   };
 
   const handleDragOver = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    if (currentMode === "runtime" || !dragState.moduleBeingDragged) return;
+    if (appMode === "runtime" || !dragState.moduleBeingDragged) return;
 
     if (isEmpty) setIsHighlighted(true);
     else {
@@ -66,7 +54,7 @@ const Calculator = () => {
       const dropTarget = identifyTarget(event);
       if (dragOverTargetName.current !== dropTarget) {
         dragOverTargetName.current = dropTarget;
-        dispatch(remove("drop-indicator-line"));
+        removeModule("drop-indicator-line");
 
         /* Do not insert the drop indicator line if
         the any of these conditions is true:
@@ -79,7 +67,7 @@ const Calculator = () => {
         when the drop happens, so the indicator should not appear.
         However if we're dragging the display, show the indicator
         regardless of the above conditions.  */
-        
+
         const condition1 = dragState.moduleBeingDragged === dropTarget;
 
         const condition2 =
@@ -98,8 +86,8 @@ const Calculator = () => {
         )
           if (dragState.moduleBeingDragged === "display")
             // If it's a display, it should be on top
-            dispatch(prepend("drop-indicator-line"));
-          else insertModule(event, "drop-indicator-line");
+            prependModule("drop-indicator-line");
+          else insertModuleByEvent(event, "drop-indicator-line");
       }
     }
   };
@@ -107,7 +95,7 @@ const Calculator = () => {
   const handleDrop = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     const droppedModuleType = dragState.moduleBeingDragged;
-    if (currentMode === "runtime" || !droppedModuleType) return;
+    if (appMode === "runtime" || !droppedModuleType) return;
 
     /* Reset the current dragoverTargetName that's used
     in handleDragOver function and remove the drop target
@@ -115,16 +103,16 @@ const Calculator = () => {
     module that's being dragged */
     dragOverTargetName.current = null;
     if (isEmpty) setIsHighlighted(false);
-    else dispatch(remove("drop-indicator-line"));
+    else removeModule("drop-indicator-line");
 
     // If it's a display, it should be on top
-    if (droppedModuleType === "display") dispatch(prepend(droppedModuleType));
-    else insertModule(event, droppedModuleType);
+    if (droppedModuleType === "display") prependModule(droppedModuleType);
+    else insertModuleByEvent(event, droppedModuleType);
   };
 
   const handleDragLeave = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    if (currentMode === "runtime") return;
+    if (appMode === "runtime") return;
     /* This code ensures that the event only fires
     when leaving the calculator canvas. Otherwise
     it would fire within the canvas unexpectedly,
@@ -145,21 +133,21 @@ const Calculator = () => {
     ) {
       if (isEmpty) setIsHighlighted(false);
       else {
-        dispatch(remove("drop-indicator-line"));
+        removeModule("drop-indicator-line");
         dragOverTargetName.current = null;
       }
     }
   };
 
   const handleDoubleClick = (event: React.MouseEvent<HTMLElement>) => {
-    if (currentMode === "runtime") return;
+    if (appMode === "runtime") return;
     const moduleToRemove = identifyTarget(event);
-    if (moduleToRemove !== "canvas") dispatch(remove(moduleToRemove));
+    if (moduleToRemove !== "canvas") removeModule(moduleToRemove);
   };
 
   const dynamicClassName = classNames("calculator-pane", "canvas", {
-    "empty": isEmpty,
-    "highlighted": isHighlighted,
+    empty: isEmpty,
+    highlighted: isHighlighted,
   });
 
   return (
