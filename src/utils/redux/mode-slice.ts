@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { MainPaneMode } from "../types/types-and-constants";
 import { RootState } from "./store";
 
-export type ModeState = {
+type ModeState = {
   value: MainPaneMode;
 };
 
@@ -10,7 +10,7 @@ const initialState: ModeState = {
   value: "constructor"
 };
 
-export const modeSlice = createSlice({
+const modeSlice = createSlice({
   name: "mainPaneMode",
   initialState,
   reducers: {

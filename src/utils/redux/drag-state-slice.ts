@@ -3,7 +3,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { DraggableModuleType } from "../types/types-and-constants";
 import { RootState } from "./store";
 
-export type DragState = {
+type DragState = {
   isDragActive: boolean;
   moduleBeingDragged: DraggableModuleType | null;
 };
@@ -13,7 +13,7 @@ const initialState: DragState = {
   moduleBeingDragged: null,
 };
 
-export const dragStateSlice = createSlice({
+const dragStateSlice = createSlice({
   name: "dragState",
   initialState,
   reducers: {

@@ -3,7 +3,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { MainPaneContent, DraggableModuleType } from "../types/types-and-constants";
 import { RootState } from "./store";
 
-export type ContentState = {
+type ContentState = {
   value: MainPaneContent;
 };
 
@@ -11,7 +11,7 @@ const initialState: ContentState = {
   value: [],
 };
 
-export const contentSlice = createSlice({
+const contentSlice = createSlice({
   name: "mainPaneContent",
   initialState,
   reducers: {

@@ -7,7 +7,7 @@ import {
   MathOperator,
 } from "../types/types-and-constants";
 
-export type CalculatorState = {
+type CalculatorState = {
   currentNumericInput: string | null;
   storedOperator: MathOperator | null;
   storedValue: number | null;
@@ -21,7 +21,7 @@ const initialState: CalculatorState = {
   displayValue: "0",
 };
 
-export const calculatorSlice = createSlice({
+const calculatorSlice = createSlice({
   name: "calculator",
   initialState,
   reducers: {
