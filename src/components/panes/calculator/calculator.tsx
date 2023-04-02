@@ -6,7 +6,7 @@ import {
   useModeSlice,
   useContentSlice,
 } from "../../../utils/redux/interface-hooks";
-import { DraggableModuleType } from "../../../utils/types/types-and-constants";
+import { DraggableModuleType } from "../../../utils/types-and-constants/types-and-constants";
 import ModuleConstructor from "../../module-constructor/module-constructor";
 import DropHint from "../../elements/drop-hint/drop-hint";
 

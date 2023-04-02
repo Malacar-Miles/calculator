@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { MainPaneContent, DraggableModuleType } from "../types/types-and-constants";
+import { MainPaneContent, DraggableModuleType } from "../types-and-constants/types-and-constants";
 import { RootState } from "./store";
 
 type ContentState = {

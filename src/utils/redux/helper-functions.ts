@@ -1,4 +1,4 @@
-import { MathOperator } from "../types/types-and-constants";
+import { MathOperator } from "../types-and-constants/types-and-constants";
 
 export const calculate = (a: number, operator: MathOperator, b: number) => {
   switch (operator) {
@@ -38,10 +38,9 @@ export const toDisplayValue = (numericValue: number): string => {
     numDigits <= maxDisplayLength
       ? stringValue
       : truncateNumericValue(numericValue);
-  return result.replace(".", ",");
+  return result;
 };
 
 export const toNumericValue = (stringValue: string): number => {
-  const localizedString = stringValue.replace(",", ".");
-  return Number(localizedString);
+  return Number(stringValue);
 };

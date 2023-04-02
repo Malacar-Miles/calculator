@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { MainPaneMode } from "../types/types-and-constants";
+import { MainPaneMode } from "../types-and-constants/types-and-constants";
 import { RootState } from "./store";
 
 type ModeState = {

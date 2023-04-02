@@ -1,6 +1,6 @@
 import "./toolkit.scss";
 import ModuleConstructor from "../../module-constructor/module-constructor";
-import { allDraggableModuleTypes } from "../../../utils/types/types-and-constants";
+import { allDraggableModuleTypes } from "../../../utils/types-and-constants/types-and-constants";
 import { useModeSlice } from "../../../utils/redux/interface-hooks";
 
 const Toolkit = () => {

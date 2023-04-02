@@ -21,7 +21,7 @@ import {
   allKeypadNumericInputs,
   allOperators,
   DraggableModuleType,
-} from "../types/types-and-constants";
+} from "../types-and-constants/types-and-constants";
 
 export const useCalculatorSlice = () => {
   const dispatch = useDispatch();

@@ -5,7 +5,7 @@ import {
   allKeypadNumericInputs,
   mathOperators,
   operatorEquals,
-} from "../../utils/types/types-and-constants";
+} from "../../utils/types-and-constants/types-and-constants";
 import classNames from "classnames";
 import { useContentSlice, useModeSlice, useDragStateSlice } from "../../utils/redux/interface-hooks";
 import Button from "../elements/button/button";

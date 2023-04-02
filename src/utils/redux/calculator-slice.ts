@@ -6,7 +6,8 @@ import {
   KeypadNumericInput,
   KeypadOperatorInput,
   MathOperator,
-} from "../types/types-and-constants";
+  decimalSeparator,
+} from "../types-and-constants/types-and-constants";
 
 type CalculatorState = {
   currentNumericInput: string | null;
@@ -31,7 +32,7 @@ const calculatorSlice = createSlice({
     numericInput: (state, action: PayloadAction<KeypadNumericInput>) => {
       const maxInputLength = 12;
       const inputKey = action.payload;
-      const inputIsADecimalSeparator = inputKey === ",";
+      const inputIsADecimalSeparator = inputKey === decimalSeparator;
 
       // Firstly, if we have a stored value but no stored operator,
       // we reset the stored value. It means the user pressed a numeric
@@ -46,7 +47,8 @@ const calculatorSlice = createSlice({
       ) {
         // This is either the very first input key, or the second
         // key which follows "0".
-        if (inputIsADecimalSeparator) state.currentNumericInput = "0,";
+        if (inputIsADecimalSeparator)
+          state.currentNumericInput = "0" + decimalSeparator; // should be "0."
         else state.currentNumericInput = inputKey;
       } else {
         // This key continues the input sequence.
@@ -57,7 +59,7 @@ const calculatorSlice = createSlice({
           // the input key to the string.
           if (
             !inputIsADecimalSeparator ||
-            !state.currentNumericInput.includes(",")
+            !state.currentNumericInput.includes(decimalSeparator)
           )
             state.currentNumericInput += inputKey;
         }
@@ -72,7 +74,7 @@ const calculatorSlice = createSlice({
       // This helper function will be used whenever we need to display
       // calculation results.
       const updateDisplay = () => {
-        if (state.storedValue === null) state.displayValue = "Не определено";
+        if (state.storedValue === null) state.displayValue = "Div by zero";
         else state.displayValue = toDisplayValue(state.storedValue);
       };
 

@@ -14,6 +14,8 @@ export type MainPaneMode = "runtime" | "constructor";
 
 export type MainPaneContent = DraggableModuleType[];
 
+export const decimalSeparator = "." as const;
+
 export const allKeypadNumericInputs = [
   "7",
   "8",
@@ -25,7 +27,7 @@ export const allKeypadNumericInputs = [
   "2",
   "3",
   "0",
-  ",",
+  decimalSeparator,
 ] as const;
 
 export type KeypadNumericInput = typeof allKeypadNumericInputs[number];

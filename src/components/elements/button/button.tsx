@@ -1,6 +1,6 @@
 import "./button.scss";
 import classNames from "classnames";
-import { KeypadInput } from "../../../utils/types/types-and-constants";
+import { KeypadInput } from "../../../utils/types-and-constants/types-and-constants";
 import {
   useCalculatorSlice,
   useModeSlice,
