@@ -74,6 +74,7 @@ const calculatorSlice = createSlice({
       // This helper function will be used whenever we need to display
       // calculation results.
       const updateDisplay = () => {
+        console.log(state.storedValue);
         if (state.storedValue === null) state.displayValue = "Div by zero";
         else state.displayValue = toDisplayValue(state.storedValue);
       };
