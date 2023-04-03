@@ -22,20 +22,14 @@ export const calculate = (a: number, operator: MathOperator, b: number) => {
 export const toDisplayValue = (numericValue: number): string => {
   const maxDisplayLength = 17;
   const stringValue = numericValue.toString();
-  const numDigits = stringValue.length;
 
-  const truncateNumericValue = (longNumber: number) => {
-    // We truncate differently depending on whether the
-    // number is very big or just has a long decimal part
-    if (longNumber > -1 && longNumber < 1)
-      return trimTruncatedValue(longNumber.toFixed(maxDisplayLength - 1));
-    else {
-      const truncatedString = longNumber.toPrecision(maxDisplayLength - 1);
-      const isExponential = truncatedString.includes("e");
-      if (!isExponential) return trimTruncatedValue(truncatedString);
-      else return longNumber.toPrecision(3);
-    }
-  };
+  if (stringValue.length <= maxDisplayLength) return stringValue;
+
+  const isExponential = (numericString: string) => numericString.includes("e");
+
+  const trimExponentialValue = (expNumber: number) => expNumber.toPrecision(3);
+
+  if (isExponential(stringValue)) return trimExponentialValue(numericValue);
 
   const removeLastCharacter = (str: string) => {
     return str.slice(0, str.length - 1);
@@ -44,8 +38,7 @@ export const toDisplayValue = (numericValue: number): string => {
   const trimTruncatedValue = (numericString: string): string => {
     // This function will remove trailing zeros
     // from strings such as "5.34000000000"
-    const isExponential = numericString.includes("e");
-    if (isExponential)
+    if (isExponential(numericString))
       throw new Error("Exponential argument in trimTruncatedValue function.");
 
     const isDecimal = numericString.includes(decimalSeparator);
@@ -66,11 +59,20 @@ export const toDisplayValue = (numericValue: number): string => {
     return trimTruncatedValue(removeLastCharacter(numericString));
   };
 
-  const result =
-    numDigits <= maxDisplayLength
-      ? stringValue
-      : truncateNumericValue(numericValue);
-  return result;
+  const truncateNumericValue = (longNumber: number) => {
+    // We truncate differently depending on whether the
+    // number is very big or just has a long decimal part
+    if (longNumber > -1 && longNumber < 1)
+      return trimTruncatedValue(longNumber.toFixed(maxDisplayLength - 1));
+    else {
+      const truncatedString = longNumber.toPrecision(maxDisplayLength - 1);
+      if (!isExponential(truncatedString))
+        return trimTruncatedValue(truncatedString);
+      else return trimExponentialValue(longNumber);
+    }
+  };
+
+  return truncateNumericValue(numericValue);
 };
 
 export const toNumericValue = (stringValue: string): number => {
